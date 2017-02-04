@@ -15,16 +15,23 @@ const ejs = require('ejs');
 const engine = require('ejs-mate');
 
 /* Custom module */
-const secret = require('./config/secret');
+const config = require('./config/secret');
 const passportConf = require('./config/passport');
 
 /* Instance of express / create express server */
 const app = express();
 
+mongoose.connect(config.database, function(err) {
+  if (err) {
+    console.log("Error connected");
+  } else {
+    console.log("Connected to the database");
+  }
+});
 
 /* Middleware */
 app.use(express.static(__dirname + '/public'));
-app.engine('ejs'. engine);
+app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.use(morgan('dev')); // Set to dev for debugging
 app.use(bodyParser.json());
@@ -33,9 +40,9 @@ app.use(expressValidator());
 app.use(cookieParser());
 app.use(session({
   resave: true,
-  saveUnintialized: true,
-  secret: secret.sessionSecret,
-  store: new MongoStore({ url: secret.database, autoReconnect: true });
+  saveUninitialized: true,
+  secret: config.secret,
+  store: new MongoStore({ url: config.database, autoReconnect: true })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -45,14 +52,16 @@ app.use(function(req, res, next) {
   next();
 });
 
+const mainRoute = require('./routes/main');
+const userRoute = require('./routes/user');
 /* App routes */
-app.use(mainRoute);
-app.use(userRoute);
+mainRoute(app);
+userRoute(app);
 
-app.listen(secret.port, function(err) {
+app.listen(config.port, function(err) {
   if (err) {
     console.log(err);
   } else {
-    console.log(`Connected to port ${secret.port}`);
+    console.log(`Running on port ${config.port}`);
   }
 });

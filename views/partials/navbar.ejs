@@ -1,0 +1,39 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">NodeStarter</a>
+    </div>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="https://startupclonegroup.slack.com">Ask a question</a></li>
+      <li><a href="/courses">All Courses</a></li>
+
+      <% if (!user) { %>
+        <li><a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Create / Login
+        </a>
+          <ul class="dropdown-menu">
+            <li><a href="/signup">Signup</a></li>
+            <li><a href="/login">Login</a></li>
+          </ul>
+        </li>
+      </ul>
+      <% } else{ %>
+        <li><a href="/my-courses">My Courses</a></li>
+        <li>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <img class="img-rounded" style="max-width:40px; max-height: 30.7969px; margin-top: -7px"
+             src="<%= user.profile.photo %>">
+          </a>
+
+          <ul class="dropdown-menu">
+            <li><a href="/profile">My Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+
+        </li>
+        <% } %>
+
+      </div>
+    </nav>

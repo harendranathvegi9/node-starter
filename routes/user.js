@@ -1,5 +1,7 @@
+/* MAIN MODULES */
 const passport = require('passport');
 
+/* CUSTOM MODULES */
 const passportConf = require('../config/passport');
 const User = require('../models/user');
 
@@ -17,6 +19,11 @@ module.exports = function(app) {
       const email = req.body.email;
       const password = req.body.password;
 
+      if (password !== req.body.confirmPassword) {
+        req.flash('errors', 'Password and Confirm Password doesn"t match');
+        return res.redirect('/signup');
+      }
+
       if (!email || !password) {
         req.flash('errors', 'Email address or that password is invalid');
         return res.redirect('/signup');
@@ -30,10 +37,11 @@ module.exports = function(app) {
           return res.redirect('/signup');
         }
         // If a user with email does NOT exist, create and save user record
-        const user = new User({
-          email: email,
-          password: password
-        });
+        const user = new User();
+        user.profile.name = name;
+        user.email = email;
+        user.password = password;
+        user.profile.photo = user.gravatar();
 
         user.save(function(err) {
           if (err) { return next(err); }
@@ -59,10 +67,23 @@ module.exports = function(app) {
       failureFlash: true
     }));
 
+  /* FACEBOOK OAUTH */
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+
+  app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect: '/profile',
+    failureRedirect: '/login'
+  }));
+
   /* PROFILE ROUTE && GET METHOD*/
   app.get('/profile', passportConf.isAuthenticated, function(req, res, next) {
     res.render('accounts/profile', { user: req.user });
   });
 
+  /* LOGOUT ROUTE */
+  app.get('/logout', function(req, res, next) {
+    req.logout();
+    res.redirect('/');
+  });
 
 }
