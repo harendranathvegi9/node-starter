@@ -4,47 +4,34 @@
 <div class="container">
 <div class="row">
   <div class="col-lg-6 col-md-offset-3">
-    <h1>Sign in</h1>
+    <h1>Forgot Password</h1>
 
 
 <!-- show any messages that come back with authentication -->
-<% if (message.length > 0) { %>
+<% if (error.length > 0) { %>
 <div class="alert alert-danger alert-dismissible">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <%= message %>
+      <%= error.message %>
     </div>
+<% } else if (success.length > 0) { %>
+  <div class="alert alert-primary alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <%= success.message %>
+      </div>
+
 <% } %>
 
 
     <hr />
 <form role="form" method="post">
+  <p>Enter your email address below and we will send you password reset instructions</p>
   <div class="form-group">
     <label for="email">Email address:</label>
     <input type="email" class="form-control" name="email" id="email">
   </div>
-  <div class="form-group">
-    <label for="password">Password:</label>
-    <input type="password" class="form-control" name="password" id="password">
-  </div>
-  <div class="checkbox">
-    <label><a href="/forgot">Forgot my password?</a></label>
-  </div>
-  <!-- <button type="submit" class="btn btn-default">Submit</button> -->
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <hr />
-
-<div class="col-lg-8 col-md-offset-5">
-<h4>OR</h4>
-</div>
-<hr />
-<hr />
-<hr />
-
-
-<a class="btn btn-block btn-social btn-facebook btn-lg" href='/auth/facebook'>
-   <i class="fa fa-facebook"></i> Sign in with Facebook
- </a>
 
 </div>
 </div>

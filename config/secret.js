@@ -13,4 +13,6 @@ module.exports = {
     passReqToCallback: true
 
   },
+
+  sendgrid: process.env.SENDGRID_API_KEY || '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'
 }
